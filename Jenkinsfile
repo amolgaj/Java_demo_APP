@@ -54,8 +54,9 @@ pipeline {
 
         stage('Deploy') {
             steps {
-                echo "Deploying new shaded jar..."
-                bat 'copy /Y target/*.jar C:/deploy_demo/app.jar'
+                 echo 'Deploying new jar...'
+                 // Copy the built jar and rename it to app.jar
+                 bat 'copy /Y target\\demo-java-1.0.0-SNAPSHOT.jar C:\\deploy_demo\\app.jar'
 
             }
         }
