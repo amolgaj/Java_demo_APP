@@ -43,19 +43,18 @@ pipeline {
         stage('Backup Current Deployment') {
             steps {
                 echo "Backing up current deployment (if exists)..."
-                bat """
-                    mkdir -p "${DEPLOY_DIR}"
-                    if [ -f "${DEPLOY_DIR}/app.jar" ]; then
-                        cp "${DEPLOY_DIR}/app.jar" "${DEPLOY_DIR}/app.jar.bak"
-                    fi
-                """
+                bat '''
+                if not exist C:\\deploy_demo mkdir C:\\deploy_demo
+                if exist C:\\deploy_demo\\app.jar (
+                    copy /Y C:\\deploy_demo\\app.jar C:\\deploy_demo\\app.jar.bak
+                )
+                '''
             }
         }
 
         stage('Deploy') {
             steps {
                 bat '''
-                if not exist C:\\deploy_demo mkdir C:\\deploy_demo
                 copy /Y target\\*.jar C:\\deploy_demo\\app.jar
                 '''
             }
@@ -64,12 +63,7 @@ pipeline {
         stage('Verify Deployment') {
             steps {
                 echo "Verifying deployment..."
-                script {
-                    def deployed = fileExists("${DEPLOY_DIR}/app.jar")
-                    if (!deployed) {
-                        error("Deployment verification failed!")
-                    }
-                }
+                bat 'java -jar C:\\deploy_demo\\app.jar'
             }
         }
     }
@@ -80,16 +74,11 @@ pipeline {
         }
         failure {
             echo "❌ Something went wrong. Performing rollback..."
-            script {
-                bat """
-                    if [ -f "${DEPLOY_DIR}/app.jar.bak" ]; then
-                        cp "${DEPLOY_DIR}/app.jar.bak" "${DEPLOY_DIR}/app.jar"
-                        echo "Rollback completed: previous version restored."
-                    else
-                        echo "No backup found. Rollback not possible."
-                    fi
-                """
-            }
+            bat '''
+            if exist C:\\deploy_demo\\app.jar.bak (
+                copy /Y C:\\deploy_demo\\app.jar.bak C:\\deploy_demo\\app.jar
+            )
+            '''
         }
     }
 }
