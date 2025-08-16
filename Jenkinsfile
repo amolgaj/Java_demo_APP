@@ -21,7 +21,7 @@ pipeline {
         stage('Build') {
             steps {
                 echo "Compiling App.java and AppTest.java..."
-                bat 'javac -d build App.java AppTest.java'
+                bat 'mvn clean package -DskipTests'
             }
         }
 
@@ -29,15 +29,14 @@ pipeline {
             steps {
                 echo "Running AppTest..."
                 // Simulating test execution (replace with JUnit/Maven if needed)
-                bat 'java -cp build AppTest'
+                bat 'mvn test'
             }
         }
 
         stage('Package') {
             steps {
                 echo "Packaging compiled classes..."
-                bat 'jar cvf build/app.jar -C build .'
-                archiveArtifacts artifacts: 'build/app.jar', fingerprint: true
+                archiveArtifacts artifacts: 'target/*.jar', fingerprint: true
             }
         }
 
@@ -55,8 +54,10 @@ pipeline {
 
         stage('Deploy') {
             steps {
-                echo "Deploying new version..."
-                bat 'cp build/app.jar "${DEPLOY_DIR}/app.jar"'
+                bat '''
+                if not exist C:\\deploy_demo mkdir C:\\deploy_demo
+                copy /Y target\\*.jar C:\\deploy_demo\\app.jar
+                '''
             }
         }
 
