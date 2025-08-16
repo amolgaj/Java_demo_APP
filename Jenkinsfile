@@ -3,7 +3,7 @@ pipeline {
 
     environment {
         GIT_URL   = 'https://github.com/amolgaj/Java_demo_APP.git'
-        GIT_CREDS: 'github-creds'0
+        GIT_CREDS = 'github-creds'
         DEPLOY_DIR = 'C:/deploy_demo'
     }
 
