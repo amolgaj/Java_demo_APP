@@ -21,7 +21,7 @@ pipeline {
         stage('Build') {
             steps {
                 echo "Compiling App.java and AppTest.java..."
-                sh 'javac -d build App.java AppTest.java'
+                bat 'javac -d build App.java AppTest.java'
             }
         }
 
@@ -29,14 +29,14 @@ pipeline {
             steps {
                 echo "Running AppTest..."
                 // Simulating test execution (replace with JUnit/Maven if needed)
-                sh 'java -cp build AppTest'
+                bat 'java -cp build AppTest'
             }
         }
 
         stage('Package') {
             steps {
                 echo "Packaging compiled classes..."
-                sh 'jar cvf build/app.jar -C build .'
+                bat 'jar cvf build/app.jar -C build .'
                 archiveArtifacts artifacts: 'build/app.jar', fingerprint: true
             }
         }
@@ -44,7 +44,7 @@ pipeline {
         stage('Backup Current Deployment') {
             steps {
                 echo "Backing up current deployment (if exists)..."
-                sh """
+                bat """
                     mkdir -p "${DEPLOY_DIR}"
                     if [ -f "${DEPLOY_DIR}/app.jar" ]; then
                         cp "${DEPLOY_DIR}/app.jar" "${DEPLOY_DIR}/app.jar.bak"
@@ -56,7 +56,7 @@ pipeline {
         stage('Deploy') {
             steps {
                 echo "Deploying new version..."
-                sh 'cp build/app.jar "${DEPLOY_DIR}/app.jar"'
+                bat 'cp build/app.jar "${DEPLOY_DIR}/app.jar"'
             }
         }
 
@@ -80,7 +80,7 @@ pipeline {
         failure {
             echo "❌ Something went wrong. Performing rollback..."
             script {
-                sh """
+                bat """
                     if [ -f "${DEPLOY_DIR}/app.jar.bak" ]; then
                         cp "${DEPLOY_DIR}/app.jar.bak" "${DEPLOY_DIR}/app.jar"
                         echo "Rollback completed: previous version restored."
