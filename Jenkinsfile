@@ -56,7 +56,7 @@ pipeline {
             steps {
                 echo "Deploying new shaded jar..."
                 bat '''
-                copy /Y target\\*-shaded.jar C:\\deploy_demo\\app.jar
+                copy /Y target\*.jar C:\deploy_demo\app.jar
                 '''
             }
         }

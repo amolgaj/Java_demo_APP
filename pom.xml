@@ -31,7 +31,7 @@
 
     <build>
         <plugins>
-            <!-- Compiler plugin for Java 17 -->
+            <!-- Compiler plugin -->
             <plugin>
                 <groupId>org.apache.maven.plugins</groupId>
                 <artifactId>maven-compiler-plugin</artifactId>
@@ -41,21 +41,17 @@
                 </configuration>
             </plugin>
 
-            <!-- Jar plugin to add Main-Class -->
+            <!-- Surefire for running JUnit 5 tests -->
             <plugin>
                 <groupId>org.apache.maven.plugins</groupId>
-                <artifactId>maven-jar-plugin</artifactId>
-                <version>3.2.2</version>
+                <artifactId>maven-surefire-plugin</artifactId>
+                <version>3.0.0-M9</version>
                 <configuration>
-                    <archive>
-                        <manifest>
-                            <mainClass>com.example.App</mainClass>
-                        </manifest>
-                    </archive>
+                    <useModulePath>false</useModulePath>
                 </configuration>
             </plugin>
 
-            <!-- Shade plugin to create fat JAR with dependencies -->
+            <!-- Shade plugin to create fat JAR with main class -->
             <plugin>
                 <groupId>org.apache.maven.plugins</groupId>
                 <artifactId>maven-shade-plugin</artifactId>
@@ -69,6 +65,7 @@
                         <configuration>
                             <transformers>
                                 <transformer implementation="org.apache.maven.plugins.shade.resource.ManifestResourceTransformer">
+                                    <!-- 👇 Change this if your main class is different -->
                                     <mainClass>com.example.App</mainClass>
                                 </transformer>
                             </transformers>
