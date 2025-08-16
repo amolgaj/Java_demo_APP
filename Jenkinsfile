@@ -3,7 +3,6 @@ pipeline {
 
     environment {
         GIT_URL   = 'https://github.com/amolgaj/Java_demo_APP.git'
-        branch: 'main',
         GIT_CREDS: 'github-creds'0
         DEPLOY_DIR = 'C:/deploy_demo'
     }
@@ -12,7 +11,7 @@ pipeline {
 
         stage('Checkout') {
             steps {
-                echo "Cloning repository using HTTPS..."
+               echo "Pulling code from GitHub..."
                 git branch: 'main',
                     url: "${GIT_URL}",
                     credentialsId: "${GIT_CREDS}"
